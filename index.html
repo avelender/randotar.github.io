@@ -1,1 +1,36 @@
-<hetml>Hello world</hetml>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мигающий зеленый квадрат</title>
+    <style>
+        #square {
+            width: 100px;
+            height: 100px;
+            background-color: green;
+            transition: opacity 0.1s;
+        }
+    </style>
+</head>
+<body>
+    <div id="square"></div>
+
+    <script>
+        const square = document.getElementById('square');
+        
+        function blink() {
+            square.style.opacity = (square.style.opacity === '1') ? '0.2' : '1';
+        }
+
+        function randomBlink() {
+            const blinkCount = Math.floor(Math.random() * 10) + 1; // От 1 до 10 миганий в секунду
+            const interval = 1000 / blinkCount;
+            
+            setInterval(blink, interval);
+        }
+
+        randomBlink();
+    </script>
+</body>
+</html>
