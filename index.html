@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мигающие зеленые квадраты</title>
+    <title>Мигающие разноцветные квадраты</title>
     <style>
         body, html {
             margin: 0;
@@ -17,7 +17,6 @@
             height: 100%;
         }
         .square {
-            background-color: green;
             transition: opacity 0.1s;
         }
     </style>
@@ -49,6 +48,10 @@
             let minOpacity, maxOpacity;
             let blinkInterval;
 
+            function getRandomColor() {
+                return `rgb(${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)}, ${Math.floor(Math.random() * 256)})`;
+            }
+
             function blink() {
                 square.style.opacity = (square.style.opacity === maxOpacity.toString()) ? minOpacity.toString() : maxOpacity.toString();
             }
@@ -57,6 +60,7 @@
                 minOpacity = Math.random() * 0.5;
                 maxOpacity = Math.random() * (1 - minOpacity) + minOpacity;
                 square.style.opacity = maxOpacity.toString();
+                square.style.backgroundColor = getRandomColor(); // Добавлено изменение цвета
             }
 
             function randomBlink() {
@@ -67,7 +71,7 @@
             }
 
             function scheduleNextBrightnessChange() {
-                const nextChangeTime = Math.random() * 1000; // Изменено с 5000 на 1000
+                const nextChangeTime = Math.random() * 1000;
                 setTimeout(() => {
                     changeBrightness();
                     scheduleNextBrightnessChange();
