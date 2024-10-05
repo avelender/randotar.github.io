@@ -47,7 +47,7 @@
         }
 
         function scheduleNextBrightnessChange() {
-            const nextChangeTime = Math.random() * 3000 + 0; // От 1 до 6 секунд
+            const nextChangeTime = Math.random() * 1000 + 0; // От 1 до 6 секунд
             setTimeout(() => {
                 changeBrightness();
                 scheduleNextBrightnessChange();
