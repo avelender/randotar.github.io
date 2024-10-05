@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мигающий зеленый квадрат</title>
+    <title>Мигающий зеленый квадрат с случайной яркостью</title>
     <style>
         #square {
             width: 100px;
@@ -19,16 +19,24 @@
     <script>
         const square = document.getElementById('square');
         let blinkInterval;
+        let minOpacity, maxOpacity;
         
         function blink() {
-            square.style.opacity = (square.style.opacity === '1') ? '0.2' : '1';
+            square.style.opacity = (square.style.opacity === maxOpacity.toString()) ? minOpacity.toString() : maxOpacity.toString();
         }
 
         function randomBlink() {
-            clearInterval(blinkInterval); // Очищаем предыдущий интервал
+            clearInterval(blinkInterval);
+            
+            // Генерируем случайные значения для минимальной и максимальной прозрачности
+            minOpacity = Math.random() * 0.5; // От 0 до 0.5
+            maxOpacity = Math.random() * (1 - minOpacity) + minOpacity; // От minOpacity до 1
             
             const blinkCount = Math.floor(Math.random() * 10) + 1; // От 1 до 10 миганий в секунду
             const interval = 1000 / blinkCount;
+            
+            // Устанавливаем начальную прозрачность
+            square.style.opacity = maxOpacity.toString();
             
             blinkInterval = setInterval(blink, interval);
         }
