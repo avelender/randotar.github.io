@@ -19,30 +19,45 @@
     <script>
         const square = document.getElementById('square');
         let blinkInterval;
+        let brightnessInterval;
         let minOpacity, maxOpacity;
         
         function blink() {
             square.style.opacity = (square.style.opacity === maxOpacity.toString()) ? minOpacity.toString() : maxOpacity.toString();
         }
 
-        function randomBlink() {
-            clearInterval(blinkInterval);
-            
-            // Генерируем случайные значения для минимальной и максимальной прозрачности
+        function changeBrightness() {
             minOpacity = Math.random() * 0.5; // От 0 до 0.5
             maxOpacity = Math.random() * (1 - minOpacity) + minOpacity; // От minOpacity до 1
+            square.style.opacity = maxOpacity.toString();
+        }
+
+        function randomBlink() {
+            clearInterval(blinkInterval);
             
             const blinkCount = Math.floor(Math.random() * 10) + 1; // От 1 до 10 миганий в секунду
             const interval = 1000 / blinkCount;
             
-            // Устанавливаем начальную прозрачность
-            square.style.opacity = maxOpacity.toString();
-            
             blinkInterval = setInterval(blink, interval);
         }
 
-        // Запускаем randomBlink() каждую секунду
-        setInterval(randomBlink, 1000);
+        function startRandomBrightness() {
+            changeBrightness(); // Изменяем яркость сразу
+            scheduleNextBrightnessChange();
+        }
+
+        function scheduleNextBrightnessChange() {
+            const nextChangeTime = Math.random() * 5000 + 1000; // От 1 до 6 секунд
+            setTimeout(() => {
+                changeBrightness();
+                scheduleNextBrightnessChange();
+            }, nextChangeTime);
+        }
+
+        // Запускаем мигание и случайное изменение яркости
+        randomBlink();
+        setInterval(randomBlink, 1000); // Обновляем частоту мигания каждую секунду
+        startRandomBrightness();
     </script>
 </body>
 </html>
