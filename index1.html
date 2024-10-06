@@ -15,7 +15,7 @@
             position: absolute;
             width: 2px;
             background-color: gray;
-            transition: height 3s ease-in-out;
+            transition: height 3s ease-in-out, transform 3s ease-in-out; /* Добавлено плавное движение */
         }
     </style>
 </head>
@@ -31,9 +31,9 @@
             setTimeout(() => {
                 line.style.height = '100%';
                 setTimeout(() => {
-                    line.remove();
+                    line.style.transform = 'translateY(100vh)'; // Линия уходит вниз за экран
                 }, 3000);
-            }, Math.random() * 1000); // Время ожидания уменьшено до 1 секунды
+            }, Math.random() * 1000); // Время ожидания до 1 секунды
         }
 
         setInterval(createLine, 2000); // Интервал создания линий остается 2 секунды
