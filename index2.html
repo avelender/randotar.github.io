@@ -16,6 +16,7 @@
             background-color: red;
             border-radius: 50%;
             position: absolute;
+            transform: translate(-50%, -50%); /* Центрирование круга */
         }
         .poop {
             position: absolute;
@@ -68,8 +69,8 @@
 
                 // Ограничение движения круга, чтобы он не прилипал к краям
                 const padding = 25; // отступ от краев
-                circleX = Math.max(padding, Math.min(window.innerWidth - padding - 50, circleX));
-                circleY = Math.max(padding, Math.min(window.innerHeight - padding - 50, circleY));
+                circleX = Math.max(padding, Math.min(window.innerWidth - padding, circleX));
+                circleY = Math.max(padding, Math.min(window.innerHeight - padding, circleY));
 
                 circle.style.left = `${circleX}px`;
                 circle.style.top = `${circleY}px`;
