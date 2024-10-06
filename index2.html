@@ -23,6 +23,11 @@
             font-size: 20px; /* Размер эмодзи "какашки" */
             transition: transform 0.1s; /* Плавное движение "какашек" */
         }
+        .explosion {
+            position: absolute;
+            font-size: 20px; /* Размер эмодзи взрыва */
+            transition: opacity 0.1s; /* Плавное исчезновение */
+        }
     </style>
 </head>
 <body>
@@ -45,6 +50,27 @@
             poop.style.left = `${circleX + Math.random() * 10 - 5}px`; // Случайное смещение по горизонтали
             poop.style.top = `${circleY + Math.random() * 10 - 5}px`; // Случайное смещение по вертикали
             document.body.appendChild(poop);
+
+            // Добавление обработчика клика на "какашку"
+            poop.addEventListener('click', () => {
+                const explosion = document.createElement('div');
+                explosion.className = 'explosion';
+                explosion.innerText = '💥'; // Эмодзи взрыва
+                explosion.style.left = `${poop.style.left}`;
+                explosion.style.top = `${poop.style.top}`;
+                document.body.appendChild(explosion);
+
+                // Удаление взрыва через 0.1 секунды
+                setTimeout(() => {
+                    explosion.style.opacity = '0'; // Плавное исчезновение
+                    setTimeout(() => {
+                        explosion.remove(); // Удаление элемента после исчезновения
+                    }, 100);
+                }, 100);
+                
+                // Удаление "какашки" при клике
+                poop.remove();
+            });
         }
 
         setInterval(createPoop, 1000); // Создание "какашки" каждую секунду
