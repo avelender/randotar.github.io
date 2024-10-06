@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Случайная вертикальная линия</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .line {
+            position: absolute;
+            width: 2px;
+            background-color: gray;
+            transition: height 3s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        function createLine() {
+            const line = document.createElement('div');
+            line.className = 'line';
+            line.style.left = Math.random() * 100 + '%';
+            line.style.height = '0';
+            document.body.appendChild(line);
+
+            setTimeout(() => {
+                line.style.height = '100%';
+                setTimeout(() => {
+                    line.remove();
+                }, 3000);
+            }, Math.random() * 5000);
+        }
+
+        setInterval(createLine, 5000);
+    </script>
+</body>
+</html>
