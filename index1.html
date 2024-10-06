@@ -13,30 +13,43 @@
         }
         .line {
             position: absolute;
-            width: 2px;
-            background-color: gray;
-            transition: height 3s ease-in-out, transform 3s ease-in-out; /* Добавлено плавное движение */
+            transition: height ease-in-out, transform ease-in-out; /* Плавное движение */
         }
     </style>
 </head>
 <body>
     <script>
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
         function createLine() {
             const line = document.createElement('div');
             line.className = 'line';
             line.style.left = Math.random() * 100 + '%';
             line.style.height = '0';
+            const width = Math.random() * 30 + 1; // Случайная ширина от 1 до 30 пикселей
+            line.style.width = width + 'px'; 
+            line.style.borderLeft = `${width}px dashed ${getRandomColor()}`; // Случайная ширина и цвет для пунктирной линии
             document.body.appendChild(line);
 
+            const duration = Math.random() * 2 + 1; // Случайная скорость от 1 до 3 секунд
+
             setTimeout(() => {
+                line.style.transitionDuration = duration + 's'; // Установка случайной скорости
                 line.style.height = '100%';
                 setTimeout(() => {
                     line.style.transform = 'translateY(100vh)'; // Линия уходит вниз за экран
-                }, 3000);
-            }, Math.random() * 1000); // Время ожидания до 1 секунды
+                }, duration * 1000); // Учитываем случайную скорость
+            }, Math.random() * 1000);
         }
 
-        setInterval(createLine, 2000); // Интервал создания линий остается 2 секунды
+        setInterval(createLine, 2000);
     </script>
 </body>
 </html>
