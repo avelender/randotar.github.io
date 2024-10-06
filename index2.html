@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Круг гонится за курсором</title>
+    <title>Круг с случайным движением</title>
     <style>
         body {
             height: 100vh;
@@ -37,8 +37,8 @@
         const circle = document.getElementById('circle');
         let circleX = Math.random() * (window.innerWidth - 50) + 25; // начальная позиция
         let circleY = Math.random() * (window.innerHeight - 50) + 25;
-        let targetX = circleX; // Целевая позиция по X
-        let targetY = circleY; // Целевая позиция по Y
+        let angle = Math.random() * 2 * Math.PI; // Случайный начальный угол
+        let moveDistance = 2; // Начальная скорость движения круга
 
         circle.style.left = `${circleX}px`;
         circle.style.top = `${circleY}px`;
@@ -76,19 +76,64 @@
 
         setInterval(createPoop, 1000); // Создание "какашки" каждую секунду
 
-        document.addEventListener('mousemove', (e) => {
-            targetX = e.clientX; // Обновление целевой позиции по X
-            targetY = e.clientY; // Обновление целевой позиции по Y
+        // Функция для движения круга в случайном направлении
+        function moveCircle() {
+            // Обновление позиции круга
+            circleX += Math.cos(angle) * moveDistance;
+            circleY += Math.sin(angle) * moveDistance;
 
-            // Отодвигание "какашек" от курсора
+            // Проверка на столкновение с краями экрана
+            const padding = 25; // отступ от краев
+            if (circleX <= padding || circleX >= window.innerWidth - padding) {
+                angle = Math.PI - angle; // Изменение направления по X
+            }
+            if (circleY <= padding || circleY >= window.innerHeight - padding) {
+                angle = -angle; // Изменение направления по Y
+            }
+
+            // Ограничение движения круга, чтобы он не прилипал к краям
+            circleX = Math.max(padding, Math.min(window.innerWidth - padding, circleX));
+            circleY = Math.max(padding, Math.min(window.innerHeight - padding, circleY));
+
+            circle.style.left = `${circleX}px`;
+            circle.style.top = `${circleY}px`;
+        }
+
+        setInterval(moveCircle, 20); // Обновление позиции круга каждые 20 мс
+
+        // Функция для изменения направления движения
+        function changeDirection() {
+            angle = Math.random() * 2 * Math.PI; // Случайный угол
+        }
+
+        setInterval(changeDirection, 1000); // Изменение направления каждую секунду
+
+        // Функция для изменения скорости круга
+        function changeSpeed() {
+            moveDistance = Math.random() * (5 - 1) + 1; // Случайная скорость от 1 до 5
+        }
+
+        setInterval(changeSpeed, 3000); // Изменение скорости каждые 3 секунды
+
+        // Функция для изменения диаметра круга
+        function changeDiameter() {
+            const newDiameter = Math.random() * (30 - 5) + 5; // Случайный диаметр от 5 до 30
+            circle.style.width = `${newDiameter}px`;
+            circle.style.height = `${newDiameter}px`;
+        }
+
+        setInterval(changeDiameter, 50); // Изменение диаметра 20 раз в секунду
+
+        // Обработчик движения мыши для отодвигания "какашек"
+        document.addEventListener('mousemove', (e) => {
             const poops = document.querySelectorAll('.poop');
             poops.forEach(poop => {
                 const poopRect = poop.getBoundingClientRect();
                 const poopX = poopRect.left + poopRect.width / 2;
                 const poopY = poopRect.top + poopRect.height / 2;
 
-                const distanceX = poopX - targetX;
-                const distanceY = poopY - targetY;
+                const distanceX = poopX - e.clientX;
+                const distanceY = poopY - e.clientY;
                 const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
 
                 if (distance < 100) { // Если курсор близко
@@ -102,41 +147,6 @@
                 }
             });
         });
-
-        // Функция для движения круга к целевой позиции
-        function moveCircle() {
-            const distanceX = targetX - circleX;
-            const distanceY = targetY - circleY;
-            const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
-
-            if (distance > 5) { // Если круг не слишком близко к целевой позиции
-                const angle = Math.atan2(distanceY, distanceX);
-                const moveDistance = 10; // Увеличенная скорость движения круга
-
-                // Обновление позиции круга
-                circleX += Math.cos(angle) * moveDistance;
-                circleY += Math.sin(angle) * moveDistance;
-
-                // Ограничение движения круга, чтобы он не прилипал к краям
-                const padding = 25; // отступ от краев
-                circleX = Math.max(padding, Math.min(window.innerWidth - padding, circleX));
-                circleY = Math.max(padding, Math.min(window.innerHeight - padding, circleY));
-
-                circle.style.left = `${circleX}px`;
-                circle.style.top = `${circleY}px`;
-            }
-        }
-
-        setInterval(moveCircle, 20); // Обновление позиции круга каждые 20 мс
-
-        // Функция для изменения диаметра круга
-        function changeDiameter() {
-            const newDiameter = Math.random() * (30 - 5) + 5; // Случайный диаметр от 5 до 30
-            circle.style.width = `${newDiameter}px`;
-            circle.style.height = `${newDiameter}px`;
-        }
-
-        setInterval(changeDiameter, 50); // Изменение диаметра 20 раз в секунду
     </script>
 </body>
 </html>
