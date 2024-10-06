@@ -3,50 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Двигающиеся дома</title>
+    <title>Анимация прямоугольника</title>
     <style>
         body {
             margin: 0;
-            overflow: hidden;
-            background-color: #f0f0f0;
+            overflow: hidden; /* Скрыть полосу прокрутки */
         }
         .rectangle {
             position: absolute;
             bottom: 0;
+            right: 0;
+            width: 200px; /* Ширина прямоугольника */
+            height: 100px; /* Высота прямоугольника */
             background-color: gray;
-            animation: move 5s linear infinite; /* Бесконечная анимация */
+            opacity: 1; /* Установить постоянную прозрачность */
+            animation: slide 5s linear infinite; /* Анимация */
         }
-        @keyframes move {
-            from {
-                transform: translateX(100%); /* Начинаем справа */
+        @keyframes slide {
+            0% {
+                transform: translateX(100%); /* Начинает за правым краем */
+                /* opacity: 0; Удалено для постоянной видимости */
             }
-            to {
-                transform: translateX(-100%); /* Двигаемся до левого края */
+            100% {
+                transform: translateX(-100vw); /* Уходит за левый край */
+                /* opacity: 0; Удалено для постоянной видимости */
             }
         }
     </style>
 </head>
 <body>
-    <script>
-        function createRectangle() {
-            const rectangle = document.createElement('div');
-            const width = Math.random() * 100 + 50; // ширина от 50 до 150 пикселей
-            const height = Math.random() * 100 + 20; // высота от 20 до 120 пикселей
-            rectangle.className = 'rectangle';
-            rectangle.style.width = width + 'px';
-            rectangle.style.height = height + 'px';
-            rectangle.style.left = '100%'; // начинаем справа
-            rectangle.style.animationDuration = (Math.random() * 5 + 3) + 's'; // случайная продолжительность анимации
-            document.body.appendChild(rectangle);
-
-            // Удаляем прямоугольник после завершения анимации
-            rectangle.addEventListener('animationiteration', () => {
-                rectangle.remove(); // Удаляем после завершения одной итерации
-            });
-        }
-
-        // Создаем прямоугольники каждые 1 секунду
-        setInterval(createRectangle, 1000);
-    </script>
+    <div class="rectangle"></div>
 </body>
 </html>
