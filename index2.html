@@ -3,35 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Анимация прямоугольника</title>
+    <title>Серые исчезающие квадраты</title>
     <style>
         body {
             margin: 0;
-            overflow: hidden; /* Скрыть полосу прокрутки */
+            overflow: hidden;
+            background-color: #f0f0f0;
         }
-        .rectangle {
+        .square {
             position: absolute;
-            bottom: 0;
-            right: 0;
-            width: 200px; /* Ширина прямоугольника */
-            height: 100px; /* Высота прямоугольника */
-            background-color: gray;
-            opacity: 1; /* Установить постоянную прозрачность */
-            animation: slide 5s linear infinite; /* Анимация */
-        }
-        @keyframes slide {
-            0% {
-                transform: translateX(100%); /* Начинает за правым краем */
-                /* opacity: 0; Удалено для постоянной видимости */
-            }
-            100% {
-                transform: translateX(-100vw); /* Уходит за левый край */
-                /* opacity: 0; Удалено для постоянной видимости */
-            }
+            background-color: rgba(128, 128, 128, 0.7); /* Изменено на серый цвет */
         }
     </style>
 </head>
 <body>
-    <div class="rectangle"></div>
+    <script>
+        function createSquare() {
+            const square = document.createElement('div');
+            square.classList.add('square');
+            
+            const size = Math.random() * 50 + 20;
+            square.style.width = `${size}px`;
+            square.style.height = `${size}px`;
+            
+            const startX = Math.random() * (window.innerWidth - size);
+            square.style.left = `${startX}px`;
+            square.style.bottom = '-50px';
+            
+            document.body.appendChild(square);
+            
+            let position = -50;
+            const interval = setInterval(() => {
+                position += 1;
+                square.style.bottom = `${position}px`;
+                
+                const opacity = 1 - (position / window.innerHeight);
+                square.style.opacity = opacity;
+                
+                if (position > window.innerHeight) {
+                    clearInterval(interval);
+                    document.body.removeChild(square);
+                }
+            }, 20);
+        }
+
+        // Увеличиваем частоту создания квадратов в 5 раз
+        setInterval(createSquare, 100); // Было 500, стало 100
+    </script>
 </body>
 </html>
