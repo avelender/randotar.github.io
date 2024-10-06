@@ -62,7 +62,7 @@
 
             if (distance > 5) { // Если круг не слишком близко к целевой позиции
                 const angle = Math.atan2(distanceY, distanceX);
-                const moveDistance = 5; // Увеличенная скорость движения круга
+                const moveDistance = 10; // Увеличенная скорость движения круга
 
                 // Обновление позиции круга
                 circleX += Math.cos(angle) * moveDistance;
