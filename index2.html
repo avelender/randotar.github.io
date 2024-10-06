@@ -21,6 +21,7 @@
         .poop {
             position: absolute;
             font-size: 20px; /* Размер эмодзи "какашки" */
+            transition: transform 0.1s; /* Плавное движение "какашек" */
         }
     </style>
 </head>
@@ -51,6 +52,28 @@
         document.addEventListener('mousemove', (e) => {
             targetX = e.clientX; // Обновление целевой позиции по X
             targetY = e.clientY; // Обновление целевой позиции по Y
+
+            // Отодвигание "какашек" от курсора
+            const poops = document.querySelectorAll('.poop');
+            poops.forEach(poop => {
+                const poopRect = poop.getBoundingClientRect();
+                const poopX = poopRect.left + poopRect.width / 2;
+                const poopY = poopRect.top + poopRect.height / 2;
+
+                const distanceX = poopX - targetX;
+                const distanceY = poopY - targetY;
+                const distance = Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+
+                if (distance < 100) { // Если курсор близко
+                    const angle = Math.atan2(distanceY, distanceX);
+                    const moveDistance = 5; // Скорость отодвигания "какашек"
+
+                    // Обновление позиции "какашки"
+                    poop.style.transform = `translate(${Math.cos(angle) * moveDistance}px, ${Math.sin(angle) * moveDistance}px)`;
+                } else {
+                    poop.style.transform = 'translate(0, 0)'; // Возврат в исходное положение
+                }
+            });
         });
 
         // Функция для движения круга к целевой позиции
