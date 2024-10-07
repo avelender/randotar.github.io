@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Падающие линии</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        class Line {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * canvas.width;
+                this.y = -50;
+                this.length = Math.random() * 320 + 80; // Диапазон длины от 80 до 400 пикселей
+                this.width = Math.random() * 50 + 30; // Диапазон ширины от 30 до 80 пикселей
+                this.speed = Math.random() * 3 + 1; // Диапазон скорости от 1 до 4
+                this.color = 'darkgray'; // Устанавливаем цвет линий в темно-серый
+                this.stopped = false;
+                this.opacity = 0; // Начальная непрозрачность 0 для постепенного проявления
+                this.fadeDuration = 30000; // Время исчезновения в миллисекундах (30 секунд)
+                this.delayDuration = 3000; // Задержка перед началом исчезновения (3 секунды)
+                this.delayTimer = 0; // Таймер для отслеживания задержки
+            }
+
+            update(deltaTime) {
+                if (this.stopped) {
+                    this.delayTimer += deltaTime; // Увеличиваем таймер задержки
+                    if (this.delayTimer >= this.delayDuration) {
+                        // Уменьшаем непрозрачность после задержки
+                        this.opacity -= deltaTime / this.fadeDuration;
+                        if (this.opacity < 0) {
+                            this.opacity = 0; // Ограничиваем непрозрачность до 0
+                        }
+                    }
+                    return;
+                }
+
+                this.y += this.speed;
+
+                // Увеличиваем непрозрачность по мере падения
+                if (this.y < canvas.height / 2) {
+                    this.opacity = Math.min(1, this.y / (canvas.height / 2)); // Пропорционально увеличиваем непрозрачность
+                } else {
+                    this.opacity = 1; // Полная непрозрачность, когда линия ниже половины экрана
+                }
+
+                if (this.y + this.length >= canvas.height) {
+                    this.y = canvas.height - this.length;
+                    this.stopped = true;
+                }
+            }
+
+            draw() {
+                ctx.beginPath();
+                ctx.moveTo(this.x, this.y);
+                ctx.lineTo(this.x, this.y + this.length);
+                ctx.strokeStyle = `rgba(105, 105, 105, ${this.opacity})`; // Устанавливаем цвет с учетом непрозрачности
+                ctx.lineWidth = this.width;
+                ctx.stroke();
+            }
+        }
+
+        const lines = [];
+        let nextLineTime = 0;
+
+        function addLine() {
+            lines.unshift(new Line()); // Добавляем новую линию в начало массива
+            nextLineTime = Math.random() * 1000 + 1000; // Следующая линия через 1-2 секунды
+        }
+
+        let lastTime = 0;
+        function animate(currentTime) {
+            const deltaTime = currentTime - lastTime;
+            lastTime = currentTime;
+
+            nextLineTime -= deltaTime;
+            if (nextLineTime <= 0) {
+                addLine();
+            }
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Рисуем линии в обратном порядке, чтобы новые были на заднем плане
+            for (let i = lines.length - 1; i >= 0; i--) {
+                const line = lines[i];
+                line.update(deltaTime);
+                line.draw();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        requestAnimationFrame(animate);
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+    </script>
+</body>
+</html>
