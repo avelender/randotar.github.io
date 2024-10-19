@@ -164,6 +164,13 @@
             organisms = organisms.filter(org => org.update()); // Удаляем мертвые организмы
             organisms = organisms.concat(newOrganisms); // Добавляем новых организмов в основной массив
 
+            // Проверка, остались ли организмы
+            if (organisms.length === 0) {
+                const elapsedTime = Math.floor((Date.now() - simulationStartTime) / 1000); // Время в секундах
+                document.getElementById('timer').innerText = `Цивилизация существовала: ${elapsedTime} с`; // Обновляем текст
+                return; // Останавливаем анимацию
+            }
+
             // Обновляем счетчик новых организмов каждую секунду
             const currentTime = Date.now();
             if (currentTime - lastUpdateTime >= 1000) {
